@@ -1,6 +1,12 @@
 ## Big Transfer (BiT): General Visual Representation Learning
 *by Alexander Kolesnikov, Lucas Beyer, Xiaohua Zhai, Joan Puigcerver, Jessica Yung, Sylvain Gelly, Neil Houlsby*
 
+## ASSIGNMENT COMPLETED FOR CS-GY6613 "ARTIFICIAL INTELLIGENCE I"
+A CoLab notebook with an altered version of BiT is available in the "ASSIGNMENT" folder, along with a
+written report answering some prompts.
+CoLab and report were collaboratively created by Amber Barksdale and Russell Wustenberg for
+the course Artificial Intelligence I in Spring 2021 as part of their Masters in CS degree at NYU.
+
 **Update 08/02/2021:** We also release ALL BiT-M models fine-tuned on ALL 19 VTAB-1k datasets, see below.
 
 ## Introduction
