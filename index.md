@@ -8,34 +8,20 @@ Unfortunately, it is possible for transfer learning to backfire. This undesirabl
 
 Transfer learning as a whole is a promising and desirable avenue in the realm of machine learning. Relevant challenges include avoiding negative transfer and automating task mapping, something easy to perform for humans but difficult to recreate in artificial intelligence (Torrey & Shavlik, 2009). The field of transfer learning is also moving toward enabling transfer between diverse tasks and performing transfer with more complex tasks. Overall, transfer learning is poised to become a standard in the field of machine learning and artificial intelligence.
 
-### Markdown
+## The Residual Network Structure of _Big Transfer_
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Big Transfer (BiT) is the outcome of a Google Brains research project based out of Zürich. The goal was to produce a large generalist residual neural network (ResNet) that could be cheaply adapted to so-called _downstream_ specialized tasks. While developing their final models, the researchers investigated several aspects of neural network training and design, releasing their results in [(Kolesnikov et al., 2020)](https://arxiv.org/abs/1912.11370). Their choices in design optimization were driven by two main motivations: first, the massive size of the training data sets required careful consideration of hardware resources; second, the models have a high memory requirement, requiring small per-device batch sizes. Much can be learned about state-of-the-art neural network design by analysis of their design choices.
 
-```markdown
-Syntax highlighted code block
+BiT consists of three trained models: BiT-S, for tasks with fewer than 20,000 training samples; BiT-M, for those with between 20,000 and 500,000; and BiT, for those with more than 500,000. It is worth noting that these labels are not correlated with the architecture size but rather the task and training data set. The creators of BiT trained all models on ‘vanilla’ ResNet-v2 architectures of various sizes with a number of modifications. They replaced all batch normalization (BN) layers with group normalization (GN) layers, all convolutional layers used Weight Standardization (WS), and used _mixup_ for medium and large tasks (Kolesnikov et al., 2020).
 
-# Header 1
-## Header 2
-### Header 3
+The choice to use a ResNet-v2 architecture (instead of the -v1) is motivated by [(He et al., 2016)](https://arxiv.org/abs/1603.05027). Following [(He et al., 2015)](https://arxiv.org/abs/1512.03385), which showed that residual functions were crucial to preventing weight decay to zero in a deep convolutional neural network, (He et al., 2016) asserts that identity mappings, and the specific sequencing of normalizations, weights, and activations, is crucial to leverage the benefits of a residual network.
 
-- Bulleted
-- List
+In Kolesnikov et al., 2020, experiments were performed to analyze the relationship between ResNet scale and the dataset size. To that end, ResNet-50x1, -50x3, -101x1, -101x3 and -152x4 architectures were trained on various image classification tasks and their performance measured. A salient point was discovered that smaller models, given sufficiently large data sets, performed _worse_ than if they had been trained on a smaller data set. This has potential impact on past research that thought to benefit their model with a bounty of data without adjusting scale proportionally. Conversely, larger architectures performed better on all tasks, especially on severely constrained batch sizes (Kolesnikov et al., 2020).
 
-1. Numbered
-2. List
+The choice to exchange BN for GN was made in part due to hardware constraints (Kolesnikov et al., 2020). The per-unit memory constraints of the more expensive ResNet architectures caused the maximum batch size to be set low. BN has been shown to perform poorly under such conditions as well as requiring costly synchronization in parallel processing environments [(Ioffe, 2017)](https://arxiv.org/abs/1502.03167). GN, conversely, thrives in low batch conditions and is ideal for a parallel processing environment [(Wu & He, 2018)](https://arxiv.org/abs/1803.08494). As shown in [Zhang et al., 2018](https://arxiv.org/abs/1710.09412), the combination of GN with WS extends data normalization to the learning space and greatly reduces training time.
 
-**Bold** and _Italic_ and `Code` text
+With the above normalizations in place, it may come as some surprise that the designers forwent the common regularization of dropout, weight decay to initial parameters or weight decay to zero (Kolesnikov et al., 2020). The designers claim that by using a sufficiently long training schedule a model will naturally converge to a loss threshold that is as though it were regularized. It should be noted, for those following along at home, that at least one of their larger models was allowed to run for 8 GPU _months_ to show sufficient results. This approach may not be tractable for all contexts [(Kilcher, 2020)](https://www.youtube.com/watch?v=k1GOF2jmX7c).
 
-[Link](url) and ![Image](src)
-```
+Finally, it is common to scale up the resolution of the image set between the training and test phases. Instead, Kolesnikov et al., 2020 advocates adding an alternative step: instead of being treated as an extension of the training set, the generalist model is fine-tuned to the test data set as though it were a specialist task. This emulates the transfer learning process as a whole, showing the model works as intended, and includes the increase in data resolution. 
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/barksdaleaz/big_transfer/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
