@@ -78,6 +78,7 @@ Given two known data points, _xᵢ_ and _xⱼ_, with known labels, _yᵢ_ and _y
 
 _~x = λxᵢ + (1 - λ)xⱼ_
 
+
 _ỹ = λyᵢ + (1 - λ)yⱼ_
 
 The resulting virtual point is a linear combination of the known data points and labels. When sampled by the network, its label will exist in the liminal space between the two discrete examples. When sampling the error in respect to this virtual point, EVM will now report smaller (i.e. smoother) adjustments back to the network. This has been shown to speed network learning and produce more confident likelihood reporting in generalization (Carratino et al., 2020).
